@@ -1,0 +1,51 @@
+version: "3.8"
+
+
+services:
+  airflow_scheduler:
+    image: airflow:${AIRFLOW_VERSION}
+    build:
+      context: .
+      dockerfile: ../hadoop_dc/airflow/Dockerfile
+      args:
+        AIRFLOW_VERSION: ${AIRFLOW_VERSION}
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    environment:
+      AIRFLOW_UPGRADE_DB: "true"
+    volumes:
+      - airflow:/opt/airflow
+      - ./confs/airflow.cfg:/opt/airflow/airflow.cfg
+      - hadoop:/opt/hadoop
+      - hive:/opt/hive
+      - spark:/opt/spark
+    networks:
+      - hdc
+    restart: on-failure
+    command: airflow scheduler
+
+  airflow_webserver:
+    image: airflow:${AIRFLOW_VERSION}
+    depends_on:
+      - airflow_scheduler
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    volumes:
+      - airflow:/opt/airflow
+      - ./confs/airflow.cfg:/opt/airflow/airflow.cfg
+      - hadoop:/opt/hadoop
+      - hive:/opt/hive
+      - spark:/opt/spark
+    networks:
+      - hdc
+    restart: on-failure
+    command: airflow webserver
+
+
+volumes:
+  airflow:
+    name: airflow

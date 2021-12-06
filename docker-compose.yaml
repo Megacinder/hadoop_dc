@@ -1,0 +1,52 @@
+version: "3.8"
+
+
+services:
+  hadoop:
+    hostname: hdc
+    image: hdc:${HADOOP_VERSION}
+    build:
+      context: .
+      dockerfile: ../hadoop_dc/hdc/Dockerfile
+      args:
+        HADOOP_VERSION: ${HADOOP_VERSION}
+        HIVE_VERSION: ${HIVE_VERSION}
+    depends_on:
+      - postgres
+    ports:
+      # HDFS
+      - 50070:50070
+      - 50090:50090
+      - 50075:50075
+      - 8020:8020
+      # Hive
+      - 10000:10000
+    volumes:
+      - hadoop:/opt/hadoop
+      - hive:/opt/hive
+      - spark:/opt/spark
+    networks:
+      - hdc
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    env_file:
+      - .env
+    ports:
+      - 5432:5432
+    networks:
+      - hdc
+
+
+volumes:
+  hadoop:
+    name: hadoop
+  hive:
+    name: hive
+  spark:
+    name: spark
+
+
+networks:
+  hdc:
+    name: hdc

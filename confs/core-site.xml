@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+  <property>
+    <name>custom.host</name>
+    <value>hdc</value>
+  </property>
+
+  <property>
+    <name>custom.home</name>
+    <value>/opt/hadoop-runtime</value>
+  </property>
+
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/tmp/hadoop</value>
+  </property>
+
+  <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://${custom.host}:8020/</value>
+  </property>
+
+  <property>
+    <name>fs.trash.interval</name>
+    <value>0</value>
+  </property>
+
+  <property>
+    <name>io.file.buffer.size</name>
+    <value>4096</value>
+  </property>
+
+  <property>
+    <name>hadoop.proxyuser.hadoop.hosts</name>
+    <value>*</value>
+  </property>
+
+  <property>
+      <name>hadoop.proxyuser.hadoop.groups</name>
+      <value>*</value>
+  </property>
+</configuration>

@@ -1,0 +1,8 @@
+venv
+ve
+virtualenv
+.idea
+.git
+.DS_Store
+**/__pycache__
+hadoop
