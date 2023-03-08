@@ -1,4 +1,4 @@
-FROM redhat/ubi8
+FROM redhat/ubi9
 
 ARG HADOOP_VERSION
 ARG HIVE_VERSION
@@ -12,7 +12,7 @@ RUN echo 'INSTALL' \
         procps \
         java-1.8.0-openjdk \
         https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm \
-    && yum install -y postgresql13 \
+    && yum install -y postgresql15 \
     && echo 'CREATE USER' \
     && useradd --system --create-home --user-group --shell /bin/bash hadoop \
     && echo 'HADOOP' \

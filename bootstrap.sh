@@ -28,10 +28,10 @@ else
 fi
 
 echo 'Cleanup'
-docker-compose --file docker-compose.yaml --file docker-compose.aux.yaml down || true
+docker compose --file docker-compose.yaml --file docker-compose.airflow.yaml down || true
 docker volume rm hadoop hive spark airflow || true
 
 echo 'Building Dockerfile.'
-docker-compose --file docker-compose.yaml --file docker-compose.aux.yaml build
+docker compose --file docker-compose.yaml --file docker-compose.airflow.yaml build
 
-echo 'Done. Use the image with "docker-compose up".'
+echo 'Done. Use the image with "docker compose up".'

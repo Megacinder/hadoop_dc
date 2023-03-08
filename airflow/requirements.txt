@@ -1,0 +1,6 @@
+apache-airflow[vertica,crypto,apache.spark,apache.hdfs,ssh,google,postgres,microsoft.mssql,hashicorp]==2.5.1
+xlsxwriter==3.0.3
+openpyxl
+autopep8
+delta-spark==2.2.0
+pytest

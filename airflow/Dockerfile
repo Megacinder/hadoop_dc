@@ -1,35 +1,31 @@
-FROM python:3.8
-FROM redhat/ubi8
-
-ARG AIRFLOW_VERSION
-
-ENV AIRFLOW_HOME=/opt/airflow
-
-WORKDIR ${AIRFLOW_HOME}
+FROM apache/airflow:2.5.1-python3.8
 
 USER root
 
-RUN set -xe \
-    && yum update -y \
-    && yum install -y python3-pip
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        openjdk-11-jdk \
+        build-essential \
+        libkrb5-dev \
+        zip \
+    && apt-get autoremove -yqq --purge \
+    && apt-get clean \
+    # comment this before first "docker build" and uncomment after (before "docker compose")
+#    && apt-get install openssh-client \
+#        install openssh-server \
+#        systemctl ssh start ssh \
+#        systemctl ssh enable
 
-RUN \
-    yum update -y \
-    && yum install -y \
-        https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm \
-        gcc \
-        make \
-    && yum install -y postgresql13 \
-    && pip3 install -U pip \
-    && pip install --no-cache-dir pypandoc \
-    && pip3 install pandas pyspark==2.4.8 openpyxl pyyaml requests \
-    && pip3 install --use-deprecated legacy-resolver apache-airflow[crypto,postgres]==${AIRFLOW_VERSION}  --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-3.6.txt" \
-    && chown hadoop:hadoop -R /opt/airflow \
-    && yum clean all \
-    && rm -rf /tmp/* /var/tmp/* /root/.cache/*
 
-USER hadoop
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
+RUN export JAVA_HOME
+ENV PYTHONPATH "${PYTHONPATH}:${AIRFLOW_HOME}"
 
-COPY --chown=hadoop:hadoop airflow/entrypoint.sh /
+USER airflow
 
-ENTRYPOINT ["/entrypoint.sh"]
+WORKDIR $AIRFLOW_HOME
+
+COPY /airflow/requirements.txt .
+
+RUN pip install --upgrade pip \
+    && pip install --no-cache-dir --user -r requirements.txt

@@ -8,7 +8,7 @@ if [ "${AIRFLOW_UPGRADE_DB}x" != "x" ]; then
   GRANT ALL PRIVILEGES ON DATABASE airflow TO postgres;
 EOSQL
 
-  airflow upgradedb
+  airflow db upgrade
 
   airflow connections \
     --add \
